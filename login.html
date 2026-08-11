@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrar - Comuna Esportes</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
+        body { background-color: #0b0c10; color: #ffffff; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+
+        .login-box { background-color: #12141c; padding: 40px; border-radius: 12px; border: 1px solid #1e2230; width: 100%; max-width: 400px; text-align: center; }
+        h1 { margin-bottom: 20px; text-transform: uppercase; font-size: 1.6rem; }
+        
+        .form-group { margin-bottom: 20px; text-align: left; }
+        label { display: block; font-size: 0.8rem; text-transform: uppercase; color: #94a3b8; margin-bottom: 6px; font-weight: bold; }
+        input { width: 100%; padding: 12px; border-radius: 6px; border: 1px solid #2d334a; background-color: #1a1d29; color: #ffffff; font-size: 1rem; }
+        
+        .btn-entrar { width: 100%; padding: 14px; border: none; border-radius: 6px; background: linear-gradient(45deg, #3b82f6, #a855f7); color: white; font-weight: bold; font-size: 1rem; cursor: pointer; text-transform: uppercase; }
+        .btn-entrar:hover { opacity: 0.9; }
+        
+        .voltar { margin-top: 15px; display: inline-block; color: #94a3b8; text-decoration: none; font-size: 0.85rem; }
+    </style>
+</head>
+<body>
+
+    <div class="login-box">
+        <h1>Acesse o Portal</h1>
+        
+        <form onsubmit="testarLogin(event)">
+            <div class="form-group">
+                <label>Usuário ou E-mail</label>
+                <input type="text" id="usuario" placeholder="Digite seu usuário" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Senha</label>
+                <input type="password" id="senha" placeholder="Digite sua senha" required>
+            </div>
+            
+            <button type="submit" class="btn-entrar">Entrar</button>
+        </form>
+
+        <a href="index.html" class="voltar">Voltar para o Início</a>
+    </div>
+
+    <script>
+        function testarLogin(event) {
+            event.preventDefault(); // Impede a página de recarregar sozinha
+
+            const user = document.getElementById('usuario').value;
+            const pass = document.getElementById('senha').value;
+
+            // Teste 1: Se for o administrador
+            if (user === 'admin' && pass === 'admin123') {
+                alert('Acesso administrativo liberado! (Modo de teste)');
+                window.location.href = 'index.html'; // Te manda de volta para a home
+            } 
+            // Teste 2: Se for um usuário comum qualquer
+            else {
+                alert('Login de usuário comum feito com sucesso!');
+                window.location.href = 'index.html'; // Te manda de volta para a home
+            }
+        }
+    </script>
+
+</body>
+</html>
