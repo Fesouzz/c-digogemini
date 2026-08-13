@@ -3,65 +3,284 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Entrar - Comuna Esportes</title>
+    <title>Painel - Comuna Esportes</title>
+    <!-- Ícones Font Awesome -->
+    <link rel="stylesheet" href="https://cloudflare.com">
+    
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
-        body { background-color: #0b0c10; color: #ffffff; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
+        
+        body { 
+            background-color: #0b0c10; 
+            color: #ffffff; 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(168, 85, 247, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(59, 130, 246, 0.15) 0%, transparent 40%);
+        }
 
-        .login-box { background-color: #12141c; padding: 40px; border-radius: 12px; border: 1px solid #1e2230; width: 100%; max-width: 400px; text-align: center; }
-        h1 { margin-bottom: 20px; text-transform: uppercase; font-size: 1.6rem; }
+        /* Menu Superior */
+        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 20px 60px; background-color: rgba(11, 12, 16, 0.8); border-bottom: 1px solid #1e2230; width: 100%; backdrop-filter: blur(10px); }
+        .logo { font-size: 1.3rem; font-weight: 900; background: linear-gradient(45deg, #a855f7, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; text-decoration: none; }
+        .nav-links { display: flex; align-items: center; gap: 30px; list-style: none; }
+        .nav-links a { color: #94a3b8; text-decoration: none; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; transition: color 0.2s; }
+        .nav-links a:hover { color: #ffffff; }
+        .btn-contribua { background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%); color: #ffffff !important; padding: 10px 24px; border-radius: 20px; border: none; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; cursor: pointer; box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4); }
+
+        /* Container Principal */
+        .main-container { flex: 1; display: flex; justify-content: center; align-items: center; width: 100%; padding: 40px 20px; }
         
-        .form-group { margin-bottom: 20px; text-align: left; }
-        label { display: block; font-size: 0.8rem; text-transform: uppercase; color: #94a3b8; margin-bottom: 6px; font-weight: bold; }
-        input { width: 100%; padding: 12px; border-radius: 6px; border: 1px solid #2d334a; background-color: #1a1d29; color: #ffffff; font-size: 1rem; }
+        /* Card Base (Glassmorphism) */
+        .glass-box { 
+            background: rgba(18, 20, 28, 0.8); 
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 40px; 
+            border-radius: 24px; 
+            border: 1px solid rgba(255, 255, 255, 0.06); 
+            width: 100%; 
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .login-size { max-width: 420px; text-align: center; }
+        .admin-size { max-width: 800px; display: none; }
         
-        .btn-entrar { width: 100%; padding: 14px; border: none; border-radius: 6px; background: linear-gradient(45deg, #3b82f6, #a855f7); color: white; font-weight: bold; font-size: 1rem; cursor: pointer; text-transform: uppercase; }
-        .btn-entrar:hover { opacity: 0.9; }
+        h1 { font-size: 1.75rem; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 8px; color: #ffffff; }
+        .subtitle { color: #94a3b8; font-size: 0.9rem; margin-bottom: 32px; }
         
-        .voltar { margin-top: 15px; display: inline-block; color: #94a3b8; text-decoration: none; font-size: 0.85rem; }
+        /* Formulários */
+        .form-group { margin-bottom: 24px; text-align: left; }
+        label { display: block; font-size: 0.75rem; text-transform: uppercase; color: #94a3b8; margin-bottom: 8px; font-weight: 700; letter-spacing: 0.5px; }
+        
+        .input-wrapper { position: relative; display: flex; align-items: center; }
+        .input-wrapper i { position: absolute; left: 16px; color: #4b5563; font-size: 1rem; transition: color 0.2s; }
+        
+        input { 
+            width: 100%; 
+            padding: 14px 16px 14px 46px; 
+            border-radius: 12px; 
+            border: 1px solid #1e2230; 
+            background-color: rgba(26, 29, 41, 0.6); 
+            color: #ffffff; 
+            font-size: 0.95rem; 
+            transition: all 0.2s ease;
+        }
+        input:focus { outline: none; border-color: #3b82f6; background-color: rgba(26, 29, 41, 0.9); box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15); }
+        input:focus + i { color: #3b82f6; }
+        
+        /* Botões */
+        .btn-primary { 
+            width: 100%; padding: 16px; border: none; border-radius: 12px; 
+            background: linear-gradient(135deg, #3b82f6 0%, #7c3aed 100%); 
+            color: white; font-weight: 700; font-size: 0.95rem; cursor: pointer; 
+            text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3); margin-top: 10px;
+        }
+        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4); opacity: 0.95; }
+        
+        .btn-logout { background: #ef4444; color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.8rem; text-transform: uppercase; }
+        .btn-logout:hover { background: #dc2626; }
+
+        .voltar { margin-top: 24px; display: inline-block; color: #64748b; text-decoration: none; font-size: 0.85rem; font-weight: 600; transition: color 0.2s; cursor: pointer; }
+        .voltar:hover { color: #94a3b8; }
+        .voltar i { margin-right: 6px; }
+
+        /* Estilos da Área Administrativa */
+        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 1px solid #1e2230; }
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 30px; }
+        .stat-card { background: rgba(26, 29, 41, 0.6); border: 1px solid #1e2230; padding: 20px; border-radius: 14px; text-align: left; }
+        .stat-card h3 { font-size: 0.75rem; text-transform: uppercase; color: #94a3b8; margin-bottom: 5px; }
+        .stat-card p { font-size: 1.8rem; font-weight: 800; color: #00b4d8; }
+        
+        .table-container { width: 100%; overflow-x: auto; background: rgba(26, 29, 41, 0.4); border: 1px solid #1e2230; border-radius: 14px; }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; }
+        th, td { padding: 16px; border-bottom: 1px solid #1e2230; }
+        th { background-color: rgba(18, 20, 28, 0.8); font-size: 0.75rem; text-transform: uppercase; color: #94a3b8; font-weight: 700; }
+        tr:last-child td { border-bottom: none; }
+        
+        .badge { padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+        .badge-futebol { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+        .badge-basquete { background: rgba(234, 179, 8, 0.2); color: #eab308; }
+        .badge-danca { background: rgba(168, 85, 247, 0.2); color: #a855f7; }
+
+        .actions i { cursor: pointer; margin-left: 10px; color: #94a3b8; transition: color 0.2s; }
+        .actions i:hover { color: #ffffff; }
+        .actions .fa-trash:hover { color: #ef4444; }
+
+        @media (max-width: 700px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .admin-header { flex-direction: column; gap: 15px; text-align: center; }
+        }
     </style>
 </head>
 <body>
 
-    <div class="login-box">
-        <h1>Acesse o Portal</h1>
+    <!-- Menu Superior -->
+    <header class="navbar">
+        <a href="index.html" class="logo">Comuna Esportes</a>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="index.html">Início</a></li>
+                <li><a href="quem-somos.html">Quem Somos</a></li>
+                <li><a href="noticias.html">Notícias</a></li>
+                <li><a href="contato.html">Contato</a></li>
+                <li><a href="#" class="btn-contribua">Contribua</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="main-container">
         
-        <form onsubmit="testarLogin(event)">
-            <div class="form-group">
-                <label>Usuário ou E-mail</label>
-                <input type="text" id="usuario" placeholder="Digite seu usuário" required>
-            </div>
+        <!-- CARD 1: FORMULÁRIO DE LOGIN -->
+        <div id="loginBox" class="glass-box login-size">
+            <h1>Acesse o Portal</h1>
+            <p class="subtitle">Use admin / admin123 para acessar o painel</p>
             
-            <div class="form-group">
-                <label>Senha</label>
-                <input type="password" id="senha" placeholder="Digite sua senha" required>
+            <form onsubmit="testarLogin(event)">
+                <div class="form-group">
+                    <label>Usuário ou E-mail</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="usuario" placeholder="Seu usuário" required>
+                        <i class="fas fa-user"></i>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Senha</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="senha" placeholder="Sua senha" required>
+                        <i class="fas fa-lock"></i>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn-primary">Entrar na Conta</button>
+            </form>
+
+            <a href="index.html" class="voltar"><i class="fas fa-arrow-left"></i>Voltar para o Início</a>
+        </div>
+
+        <!-- CARD 2: PAINEL DO ADMINISTRADOR -->
+        <div id="adminBox" class="glass-box admin-size">
+            <div class="admin-header">
+                <div>
+                    <h1>Painel Administrativo</h1>
+                    <p style="color: #94a3b8; font-size: 0.9rem;">Gerenciamento interno da Comuna Esportes</p>
+                </div>
+                <button onclick="logout()" class="btn-logout"><i class="fas fa-sign-out-alt"></i> Sair</button>
             </div>
-            
-            <button type="submit" class="btn-entrar">Entrar</button>
-        </form>
 
-        <a href="index.html" class="voltar">Voltar para o Início</a>
-    </div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Total de Grupos</h3>
+                    <p>3 Ativos</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Total de Atletas</h3>
+                    <p>105</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Solicitações</h3>
+                    <p style="color: #a855f7;">4</p>
+                </div>
+            </div>
 
-    <script>
-        function testarLogin(event) {
-            event.preventDefault(); // Impede a página de recarregar sozinha
+            <h2 style="font-size: 1.1rem; text-transform: uppercase; margin-bottom: 15px;">Grupos Ativos no Site</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Nome do Grupo</th>
+                <th>Modalidade</th>
+                <th>Integrantes</th>
+                <th>Localização</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody id="tabelaGrupos">
+            <tr>
+                <td><strong>União do Terrão F.C.</strong></td>
+                <td><span class="badge badge-futebol">Futebol</span></td>
+                <td>42 Atletas</td>
+                <td>Campo Central</td>
+                <td class="actions">
+                    <i class="fas fa-edit"></i>
+                    <i class="fas fa-trash" onclick="excluirGrupo(this)"></i>
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Crias do Asfalto 3x3</strong></td>
+                <td><span class="badge badge-basquete">Basquete</span></td>
+                <td>28 Jogadores</td>
+                <td>Quadra Azul</td>
+                <td class="actions">
+                    <i class="fas fa-edit"></i>
+                    <i class="fas fa-trash" onclick="excluirGrupo(this)"></i>
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Ritmo e Poesia Crew</strong></td>
+                <td><span class="badge badge-danca">Dança</span></td>
+                <td>35 Integrantes</td>
+                <td>Galpão Cultural</td>
+                <td class="actions">
+                    <i class="fas fa-edit"></i>
+                    <i class="fas fa-trash" onclick="excluirGrupo(this)"></i>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<script>
+    function testarLogin(event) {
+        event.preventDefault(); 
 
-            const user = document.getElementById('usuario').value;
-            const pass = document.getElementById('senha').value;
+        const user = document.getElementById('usuario').value;
+        const pass = document.getElementById('senha').value;
 
-            // Teste 1: Se for o administrador
-            if (user === 'admin' && pass === 'admin123') {
-                alert('Acesso administrativo liberado! (Modo de teste)');
-                window.location.href = 'index.html'; // Te manda de volta para a home
-            } 
-            // Teste 2: Se for um usuário comum qualquer
-            else {
-                alert('Login de usuário comum feito com sucesso!');
-                window.location.href = 'index.html'; // Te manda de volta para a home
-            }
+        if (user === 'admin' && pass === 'admin123') {
+            // Esconde a caixa de login e exibe o painel administrativo
+            document.getElementById('loginBox').style.display = 'none';
+            document.getElementById('adminBox').style.display = 'block';
+        } else {
+            alert('Login de usuário comum efetuado com sucesso! Redirecionando...');
+            window.location.href = 'index.html'; 
         }
-    </script>
+    }
 
-</body>
-</html>
+    function logout() {
+        // Limpa os campos de texto
+        document.getElementById('usuario').value = '';
+        document.getElementById('senha').value = '';
+        
+        // Alterna a visibilidade dos cards de volta para o login
+        document.getElementById('adminBox').style.display = 'none';
+        document.getElementById('loginBox').style.display = 'block';
+    }
+
+    function excluirGrupo(botao) {
+        if (confirm("Tem certeza que deseja excluir este grupo?")) {
+            // Encontra a linha (tr) correspondente ao botão clicado e remove da tabela
+            const linha = botao.closest('tr');
+            linha.remove();
+            
+            // Atualiza dinamicamente o contador de grupos ativos no painel
+            atualizarContador();
+        }
+    }
+
+    function atualizarContador() {
+        const totalLinhas = document.querySelectorAll('#tabelaGrupos tr').length;
+        // Atualiza o texto do primeiro card de métricas com o valor correto
+        const cardGrupos = document.querySelector('.stats-grid .stat-card:first-child p');
+        if (cardGrupos) {
+            cardGrupos.textContent = `${totalLinhas} Ativos`;
+        }
+    }
+</script>
