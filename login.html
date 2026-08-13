@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel - Comuna Esportes</title>
     <!-- Ícones Font Awesome -->
-    <link rel="stylesheet" href="https://cloudflare.com">
+<link rel="stylesheet" href="https://cloudflare.com">
+
     
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
@@ -104,17 +105,41 @@
         .badge { padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
         .badge-futebol { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
         .badge-basquete { background: rgba(234, 179, 8, 0.2); color: #eab308; }
-        .badge-danca { background: rgba(168, 85, 247, 0.2); color: #a855f7; }
+                .badge-danca { background: rgba(168, 85, 247, 0.2); color: #a855f7; }
 
-        .actions i { cursor: pointer; margin-left: 10px; color: #94a3b8; transition: color 0.2s; }
-        .actions i:hover { color: #ffffff; }
-        .actions .fa-trash:hover { color: #ef4444; }
+      /* Estilização premium para os botões em formato de texto */
+.btn-action-text {
+    background: transparent;
+    border: none;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    margin-right: 15px;
+    transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+.btn-edit-text {
+    color: #3b82f6; /* Azul sutil para edição */
+}
+
+.btn-delete-text {
+    color: #ef4444; /* Vermelho sutil para exclusão */
+}
+
+.btn-action-text:hover {
+    filter: brightness(1.3);
+    text-decoration: underline;
+}
+
 
         @media (max-width: 700px) {
             .stats-grid { grid-template-columns: 1fr; }
             .admin-header { flex-direction: column; gap: 15px; text-align: center; }
         }
     </style>
+
 </head>
 <body>
 
@@ -163,81 +188,81 @@
         </div>
 
         <!-- CARD 2: PAINEL DO ADMINISTRADOR -->
-        <div id="adminBox" class="glass-box admin-size">
-            <div class="admin-header">
-                <div>
-                    <h1>Painel Administrativo</h1>
-                    <p style="color: #94a3b8; font-size: 0.9rem;">Gerenciamento interno da Comuna Esportes</p>
-                </div>
-                <button onclick="logout()" class="btn-logout"><i class="fas fa-sign-out-alt"></i> Sair</button>
-            </div>
+         <!-- CARD 2: PAINEL DO ADMINISTRADOR -->
+<div id="adminBox" class="glass-box admin-size">
+    <div class="admin-header">
+        <div>
+            <h1>Painel Administrativo</h1>
+            <p style="color: #94a3b8; font-size: 0.9rem;">Gerenciamento interno da Comuna Esportes</p>
+        </div>
+        <button onclick="logout()" class="btn-logout"><i class="fas fa-sign-out-alt"></i> Sair</button>
+    </div>
 
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <h3>Total de Grupos</h3>
-                    <p>3 Ativos</p>
-                </div>
-                <div class="stat-card">
-                    <h3>Total de Atletas</h3>
-                    <p>105</p>
-                </div>
-                <div class="stat-card">
-                    <h3>Solicitações</h3>
-                    <p style="color: #a855f7;">4</p>
-                </div>
-            </div>
+    <!-- Modificado: Grid agora tem apenas 2 colunas e sem o Total de Atletas -->
+    <div class="stats-grid" style="grid-template-columns: repeat(2, 1fr);">
+        <div id="cardAtivos" class="stat-card aba-ativa" onclick="alternarAba('ativos')" style="cursor: pointer;">
+            <h3>Total de Grupos</h3>
+            <p id="txtTotalAtivos">3 Ativos</p>
+        </div>
+        <div id="cardSolicitacoes" class="stat-card" onclick="alternarAba('solicitacoes')" style="cursor: pointer;">
+            <h3>Solicitações</h3>
+            <p id="txtTotalSolicitacoes" style="color: #a855f7;">2</p>
+        </div>
+    </div>
 
-            <h2 style="font-size: 1.1rem; text-transform: uppercase; margin-bottom: 15px;">Grupos Ativos no Site</h2>
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-<div class="table-container">
-    <table>
-        <thead>
-            <tr>
-                <th>Nome do Grupo</th>
-                <th>Modalidade</th>
-                <th>Integrantes</th>
-                <th>Localização</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody id="tabelaGrupos">
-            <tr>
-                <td><strong>União do Terrão F.C.</strong></td>
-                <td><span class="badge badge-futebol">Futebol</span></td>
-                <td>42 Atletas</td>
-                <td>Campo Central</td>
-                <td class="actions">
-                    <i class="fas fa-edit"></i>
-                    <i class="fas fa-trash" onclick="excluirGrupo(this)"></i>
-                </td>
-            </tr>
-            <tr>
-                <td><strong>Crias do Asfalto 3x3</strong></td>
-                <td><span class="badge badge-basquete">Basquete</span></td>
-                <td>28 Jogadores</td>
-                <td>Quadra Azul</td>
-                <td class="actions">
-                    <i class="fas fa-edit"></i>
-                    <i class="fas fa-trash" onclick="excluirGrupo(this)"></i>
-                </td>
-            </tr>
-            <tr>
-                <td><strong>Ritmo e Poesia Crew</strong></td>
-                <td><span class="badge badge-danca">Dança</span></td>
-                <td>35 Integrantes</td>
-                <td>Galpão Cultural</td>
-                <td class="actions">
-                    <i class="fas fa-edit"></i>
-                    <i class="fas fa-trash" onclick="excluirGrupo(this)"></i>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+    <!-- ABA 1: GRUPOS ATIVOS (Sem a coluna de integrantes) -->
+    <div id="secaoAtivos">
+        <h2 style="font-size: 1.1rem; text-transform: uppercase; margin-bottom: 15px;">Grupos Ativos no Site</h2>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nome do Grupo</th>
+                        <th>Modalidade</th>
+                        <th>Localização</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+             <tbody id="tabelaGrupos">
+    <tr>
+        <td><strong>União do Terrão F.C.</strong></td>
+        <td><span class="badge badge-futebol">Futebol</span></td>
+        <td>Campo Central</td>
+        <td class="actions">
+            <!-- Botões em formato de link textual moderno -->
+            <button onclick="abrirModalEdicao(this)" class="btn-action-text btn-edit-text">Editar</button>
+            <button onclick="excluirGrupo(this)" class="btn-action-text btn-delete-text">Excluir</button>
+        </td>
+    </tr>
+    <tr>
+        <td><strong>Crias do Asfalto 3x3</strong></td>
+        <td><span class="badge badge-basquete">Basquete</span></td>
+        <td>Quadra Azul</td>
+        <td class="actions">
+            <button onclick="abrirModalEdicao(this)" class="btn-action-text btn-edit-text">Editar</button>
+            <button onclick="excluirGrupo(this)" class="btn-action-text btn-delete-text">Excluir</button>
+        </td>
+    </tr>
+    <tr>
+        <td><strong>Ritmo e Poesia Crew</strong></td>
+        <td><span class="badge badge-danca">Dança</span></td>
+        <td>Galpão Cultural</td>
+        <td class="actions">
+            <button onclick="abrirModalEdicao(this)" class="btn-action-text btn-edit-text">Editar</button>
+            <button onclick="excluirGrupo(this)" class="btn-action-text btn-delete-text">Excluir</button>
+        </td>
+    </tr>
+</tbody>
+
+
+            </table>
+        </div>
+    </div>
+
+       
 <script>
+      let linhaSendoEditada = null; // Armazena a linha ativa para edição (se precisar)
+
     function testarLogin(event) {
         event.preventDefault(); 
 
@@ -245,9 +270,9 @@
         const pass = document.getElementById('senha').value;
 
         if (user === 'admin' && pass === 'admin123') {
-            // Esconde a caixa de login e exibe o painel administrativo
             document.getElementById('loginBox').style.display = 'none';
             document.getElementById('adminBox').style.display = 'block';
+            atualizarContadoresGerais(); // Sincroniza os totais ao logar
         } else {
             alert('Login de usuário comum efetuado com sucesso! Redirecionando...');
             window.location.href = 'index.html'; 
@@ -255,32 +280,70 @@
     }
 
     function logout() {
-        // Limpa os campos de texto
         document.getElementById('usuario').value = '';
         document.getElementById('senha').value = '';
-        
-        // Alterna a visibilidade dos cards de volta para o login
         document.getElementById('adminBox').style.display = 'none';
         document.getElementById('loginBox').style.display = 'block';
     }
 
     function excluirGrupo(botao) {
         if (confirm("Tem certeza que deseja excluir este grupo?")) {
-            // Encontra a linha (tr) correspondente ao botão clicado e remove da tabela
             const linha = botao.closest('tr');
             linha.remove();
-            
-            // Atualiza dinamicamente o contador de grupos ativos no painel
-            atualizarContador();
+            atualizarContadoresGerais();
         }
     }
 
-    function atualizarContador() {
-        const totalLinhas = document.querySelectorAll('#tabelaGrupos tr').length;
-        // Atualiza o texto do primeiro card de métricas com o valor correto
-        const cardGrupos = document.querySelector('.stats-grid .stat-card:first-child p');
-        if (cardGrupos) {
-            cardGrupos.textContent = `${totalLinhas} Ativos`;
+    // --- NOVAS FUNÇÕES DE INTERAÇÃO ---
+    
+    // Alterna a exibição das tabelas na tela
+    function alternarAba(abaAlvo) {
+        if (abaAlvo === 'ativos') {
+            document.getElementById('secaoAtivos').style.display = 'block';
+            document.getElementById('secaoSolicitacoes').style.display = 'none';
+        } else if (abaAlvo === 'solicitacoes') {
+            document.getElementById('secaoAtivos').style.display = 'none';
+            document.getElementById('secaoSolicitacoes').style.display = 'block';
         }
+    }
+
+    // CORRIGIDO: Lógica atualizada sem a variável e sem a coluna de integrantes
+    function decidirSolicitacao(botao, decisao, modalidade, local) {
+        const linhaSolicitacao = botao.closest('tr');
+        const nomeGrupo = linhaSolicitacao.cells[0].innerText;
+
+        if (decisao === 'aprovar') {
+            let classeBadge = 'badge-futebol';
+            if (modalidade === 'Basquete') classeBadge = 'badge-basquete';
+            if (modalidade === 'Dança') classeBadge = 'badge-danca';
+
+            // Cria o elemento na tabela de ativos na hora (4 colunas: Nome, Badge, Local, Ações)
+            const tabelaAtivos = document.getElementById('tabelaGrupos');
+            const novaLinha = tabelaAtivos.insertRow();
+            novaLinha.innerHTML = `
+                <td><strong>${nomeGrupo}</strong></td>
+                <td><span class="badge ${classeBadge}">${modalidade}</span></td>
+                <td>${local}</td>
+                <td class="actions">
+                    <i class="fas fa-edit" onclick="abrirModalEdicao(this)"></i>
+                    <i class="fas fa-trash" onclick="excluirGrupo(this)"></i>
+                </td>
+            `;
+            alert(`Grupo "${nomeGrupo}" foi aprovado com sucesso!`);
+        } else {
+            alert(`A solicitação do grupo "${nomeGrupo}" foi recusada.`);
+        }
+
+        linhaSolicitacao.remove();
+        atualizarContadoresGerais();
+    }
+
+    // Mantém os totais numéricos atualizados de acordo com as linhas das tabelas
+    function atualizarContadoresGerais() {
+        const totalAtivos = document.querySelectorAll('#tabelaGrupos tr').length;
+        document.getElementById('txtTotalAtivos').textContent = `${totalAtivos} Ativos`;
+
+        const totalPendente = document.querySelectorAll('#tabelaSolicitacoes tr').length;
+        document.getElementById('txtTotalSolicitacoes').textContent = totalPendente;
     }
 </script>
