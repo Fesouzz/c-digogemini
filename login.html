@@ -316,11 +316,44 @@
         </td>
     </tr>
 </tbody>
-
-
             </table>
         </div>
     </div>
+    <div id="secaoSolicitacoes" style="display: none;">
+    <h2 style="font-size: 1.1rem; text-transform: uppercase; margin-bottom: 15px;">Solicitações de Novos Grupos</h2>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Sugestão de Grupo</th>
+                    <th>Modalidade</th>
+                    <th>Localização Sugerida</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody id="tabelaSolicitacoes">
+                <tr>
+                    <td><strong>Vôlei dos Coroas</strong></td>
+                    <td><span class="badge badge-futebol">Futebol</span></td>
+                    <td>Quadra de Areia</td>
+                    <td class="actions">
+                        <!-- Apenas este botão abre o novo formato de visualização -->
+                        <button onclick="abrirModalProposta(this)" class="btn-action-text btn-edit-text" style="color: #a855f7;">Analisar</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Breaking Zone</strong></td>
+                    <td><span class="badge badge-danca">Dança</span></td>
+                    <td>Estação Central</td>
+                    <td class="actions">
+                        <button onclick="abrirModalProposta(this)" class="btn-action-text btn-edit-text" style="color: #a855f7;">Analisar</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
 
     <!-- JANELA MODAL DE EDIÇÃO -->
 <!-- JANELA MODAL DE EDIÇÃO CORRIGIDA -->
@@ -357,10 +390,46 @@
     </div>
 </div>
 
+<!-- NOVO: JANELA MODAL PARA ANALISAR SOLICITAÇÃO -->
+<!-- JANELA MODAL PARA ANALISAR SOLICITAÇÃO (ATUALIZADA) -->
+<div id="modalProposta" class="modal-overlay">
+    <div class="modal-box" style="position: relative;">
+        <!-- Botão de X para fechar sem tomar ação -->
+        <button type="button" onclick="fecharModal()" style="position: absolute; top: 20px; right: 20px; background: transparent; border: none; color: #94a3b8; font-size: 1.2rem; cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='#94a3b8'">&times;</button>
+
+        <h2 style="margin-bottom: 20px; font-size: 1.4rem; text-transform: uppercase; letter-spacing: -0.5px;">Analisar Proposta</h2>
+        
+        <div class="form-group">
+            <label>Nome do Grupo</label>
+            <input type="text" id="propNome" style="padding-left: 16px;" readonly>
+        </div>
+        
+        <div class="form-group">
+            <label>Modalidade</label>
+            <input type="text" id="propModalidade" style="padding-left: 16px;" readonly>
+        </div>
+
+        <div class="form-group">
+            <label>Localização</label>
+            <input type="text" id="propLocalizacao" style="padding-left: 16px;" readonly>
+        </div>
+
+        <!-- NOVO CAMPO: Descrição da Proposta -->
+        <div class="form-group">
+            <label>Descrição da Proposta</label>
+            <textarea id="propDescricao" style="width: 100%; height: 80px; padding: 12px 16px; border-radius: 12px; border: 1px solid #1e2230; background-color: rgba(26, 29, 41, 0.6); color: #ffffff; font-size: 0.95rem; resize: none; outline: none; font-family: inherit;" readonly>Este grupo tem o intuito de reunir os moradores locais aos finais de semana para a prática esportiva e integração da comunidade.</textarea>
+        </div>
+
+        <div class="modal-buttons">
+            <button type="button" onclick="processarDecisaoModal('recusar')" class="btn-cancel">Recusar</button>
+            <button type="button" onclick="processarDecisaoModal('aprovar')" class="btn-primary" style="flex: 1; margin: 0; background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);">Aceitar Grupo</button>
+        </div>
+    </div>
+</div>
 
        
 <script>
-      let linhaSendoEditada = null; // Armazena a linha ativa para edição (se precisar)
+    let linhaSendoEditada = null; // Armazena a linha ativa para edição ou análise
 
     function testarLogin(event) {
         event.preventDefault(); 
@@ -393,9 +462,7 @@
         }
     }
 
-    // --- NOVAS FUNÇÕES DE INTERAÇÃO ---
-    
-    // Alterna a exibição das tabelas na tela
+    // --- FUNÇÕES DE INTERAÇÃO DE ABAS ---
     function alternarAba(abaAlvo) {
         if (abaAlvo === 'ativos') {
             document.getElementById('secaoAtivos').style.display = 'block';
@@ -404,37 +471,6 @@
             document.getElementById('secaoAtivos').style.display = 'none';
             document.getElementById('secaoSolicitacoes').style.display = 'block';
         }
-    }
-
-    // CORRIGIDO: Lógica atualizada sem a variável e sem a coluna de integrantes
-    function decidirSolicitacao(botao, decisao, modalidade, local) {
-        const linhaSolicitacao = botao.closest('tr');
-        const nomeGrupo = linhaSolicitacao.cells[0].innerText;
-
-        if (decisao === 'aprovar') {
-            let classeBadge = 'badge-futebol';
-            if (modalidade === 'Basquete') classeBadge = 'badge-basquete';
-            if (modalidade === 'Dança') classeBadge = 'badge-danca';
-
-            // Cria o elemento na tabela de ativos na hora (4 colunas: Nome, Badge, Local, Ações)
-            const tabelaAtivos = document.getElementById('tabelaGrupos');
-            const novaLinha = tabelaAtivos.insertRow();
-            novaLinha.innerHTML = `
-                <td><strong>${nomeGrupo}</strong></td>
-                <td><span class="badge ${classeBadge}">${modalidade}</span></td>
-                <td>${local}</td>
-                <td class="actions">
-                    <i class="fas fa-edit" onclick="abrirModalEdicao(this)"></i>
-                    <i class="fas fa-trash" onclick="excluirGrupo(this)"></i>
-                </td>
-            `;
-            alert(`Grupo "${nomeGrupo}" foi aprovado com sucesso!`);
-        } else {
-            alert(`A solicitação do grupo "${nomeGrupo}" foi recusada.`);
-        }
-
-        linhaSolicitacao.remove();
-        atualizarContadoresGerais();
     }
 
     // Mantém os totais numéricos atualizados de acordo com as linhas das tabelas
@@ -446,51 +482,105 @@
         document.getElementById('txtTotalSolicitacoes').textContent = totalPendente;
     }
 
-    // --- SISTEMA DA JANELA MODAL DE EDIÇÃO ---
+    // --- SISTEMA DA JANELA MODAL DE EDIÇÃO (MANTIDO IGUAL) ---
+    function abrirModalEdicao(botao) {
+        linhaSendoEditada = botao.closest('tr');
 
-function abrirModalEdicao(botao) {
-    linhaSendoEditada = botao.closest('tr');
+        const nomeAtual = linhaSendoEditada.cells[0].innerText;
+        const modalidadeAtual = linhaSendoEditada.cells[1].innerText;
+        const localizacaoAtual = linhaSendoEditada.cells[2].innerText;
 
-    // Captura os dados mapeando os índices exatos das colunas
-    const nomeAtual = linhaSendoEditada.cells[0].innerText;
-    const modalidadeAtual = linhaSendoEditada.cells[1].innerText;
-    const localizacaoAtual = linhaSendoEditada.cells[2].innerText;
+        document.getElementById('editNome').value = nomeAtual;
+        document.getElementById('editModalidade').value = modalidadeAtual;
+        document.getElementById('editLocalizacao').value = localizacaoAtual;
 
-    // Alimenta os inputs da janela flutuante
-    document.getElementById('editNome').value = nomeAtual;
-    document.getElementById('editModalidade').value = modalidadeAtual;
-    document.getElementById('editLocalizacao').value = localizacaoAtual;
-
-    // Abre o pop-up na tela
-    document.getElementById('modalEdicao').classList.add('active');
-}
-
-
-function fecharModal() {
-    document.getElementById('modalEdicao').classList.remove('active');
-    linhaSendoEditada = null;
-}
-
-function salvarEdicao(event) {
-    event.preventDefault(); // Impede a página de recarregar
-
-    if (linhaSendoEditada) {
-        const novoNome = document.getElementById('editNome').value;
-        const novaModalidade = document.getElementById('editModalidade').value;
-        const novaLocalizacao = document.getElementById('editLocalizacao').value;
-
-        // Define a cor da tag (badge) correta baseada no esporte escolhido
-        let classeBadge = 'badge-futebol';
-        if (novaModalidade === 'Basquete') classeBadge = 'badge-basquete';
-        if (novaModalidade === 'Dança') classeBadge = 'badge-danca';
-
-        // Atualiza os dados na tabela em tempo real com as 4 colunas certas
-        linhaSendoEditada.cells[0].innerHTML = `<strong>${novoNome}</strong>`;
-        linhaSendoEditada.cells[1].innerHTML = `<span class="badge ${classeBadge}">${novaModalidade}</span>`;
-        linhaSendoEditada.cells[2].innerText = novaLocalizacao;
-
-        fecharModal();
+        document.getElementById('modalEdicao').classList.add('active');
     }
-}
 
+    // Função de fechar atualizada para fechar qualquer um dos dois modais abertos
+    function fecharModal() {
+        document.getElementById('modalEdicao').classList.remove('active');
+        
+        const modalProposta = document.getElementById('modalProposta');
+        if (modalProposta) {
+            modalProposta.classList.remove('active');
+        }
+        
+        linhaSendoEditada = null;
+    }
+
+    function salvarEdicao(event) {
+        event.preventDefault(); 
+
+        if (linhaSendoEditada) {
+            const novoNome = document.getElementById('editNome').value;
+            const novaModalidade = document.getElementById('editModalidade').value;
+            const novaLocalizacao = document.getElementById('editLocalizacao').value;
+
+            let classeBadge = 'badge-futebol';
+            if (novaModalidade === 'Basquete') classeBadge = 'badge-basquete';
+            if (novaModalidade === 'Dança') classeBadge = 'badge-danca';
+
+            linhaSendoEditada.cells[0].innerHTML = `<strong>${novoNome}</strong>`;
+            linhaSendoEditada.cells[1].innerHTML = `<span class="badge ${classeBadge}">${novaModalidade}</span>`;
+            linhaSendoEditada.cells[2].innerText = novaLocalizacao;
+
+            fecharModal();
+        }
+    }
+
+    // --- NOVO SISTEMA: MODAL PARA ANALISAR SOLICITAÇÃO ---
+    function abrirModalProposta(botao) {
+        linhaSendoEditada = botao.closest('tr');
+
+        // Captura os dados textuais da linha de solicitação de forma segura usando os índices corretos das colunas
+        const nomeSugerido = linhaSendoEditada.cells[0].innerText;
+        const modalidadeSugerida = linhaSendoEditada.cells[1].innerText;
+        const localSugerido = linhaSendoEditada.cells[2].innerText;
+
+        // Alimenta os inputs travados para leitura (readonly) do modal de proposta
+        document.getElementById('propNome').value = nomeSugerido;
+        document.getElementById('propModalidade').value = modalidadeSugerida;
+        document.getElementById('propLocalizacao').value = localSugerido;
+
+        // Abre o novo modal de análise na tela adicionando a classe active
+        document.getElementById('modalProposta').classList.add('active');
+    }
+
+    // Processa os botões "Aceitar Grupo" e "Recusar" de dentro do novo modal
+    function processarDecisaoModal(decisao) {
+        if (!linhaSendoEditada) return;
+
+        const nomeGrupo = document.getElementById('propNome').value;
+        const modalidade = document.getElementById('propModalidade').value;
+        const local = document.getElementById('propLocalizacao').value;
+
+        if (decisao === 'aprovar') {
+            let classeBadge = 'badge-futebol';
+            // .includes garante o mapeamento correto mesmo contendo espaçamentos internos do badge
+            if (modalidade.includes('Basquete')) classeBadge = 'badge-basquete';
+            if (modalidade.includes('Dança')) classeBadge = 'badge-danca';
+
+            // Insere na tabela de Ativos mantendo os botões textuais idênticos à sua foto do painel
+            const tabelaAtivos = document.getElementById('tabelaGrupos');
+            const novaLinha = tabelaAtivos.insertRow();
+            novaLinha.innerHTML = `
+                <td><strong>${nomeGrupo}</strong></td>
+                <td><span class="badge ${classeBadge}">${modalidade}</span></td>
+                <td>${local}</td>
+                <td class="actions">
+                    <button onclick="abrirModalEdicao(this)" class="btn-action-text btn-edit-text">Editar</button>
+                    <button onclick="excluirGrupo(this)" class="btn-action-text btn-delete-text">Excluir</button>
+                </td>
+            `;
+            alert(`Grupo "${nomeGrupo}" foi aprovado com sucesso e adicionado aos ativos!`);
+        } else {
+            alert(`A solicitação do grupo "${nomeGrupo}" foi recusada.`);
+        }
+
+        // Limpa a linha tratada da tabela de solicitações, fecha a janela e recalcula o topo
+        linhaSendoEditada.remove();
+        fecharModal();
+        atualizarContadoresGerais();
+    }
 </script>
